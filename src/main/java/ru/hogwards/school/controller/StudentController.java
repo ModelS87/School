@@ -3,7 +3,9 @@ package ru.hogwards.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwards.school.model.Student;
+import ru.hogwards.school.dto.StudentDtoIn;
+import ru.hogwards.school.dto.StudentDtoOut;
+import ru.hogwards.school.entity.Student;
 import ru.hogwards.school.service.StudentService;
 
 import java.util.Collection;
@@ -28,29 +30,21 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        return studentService.addStudent(student);
+    public StudentDtoOut create(@RequestBody StudentDtoIn studentDtoIn) {
+        return studentService.create(studentDtoIn);
     }
 
-    @PutMapping
-    public ResponseEntity<Student> editStudent(@RequestBody Student student) {
-        Student foundStudent = studentService.editStudent(student);
-        if (foundStudent == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(foundStudent);
+    @PutMapping("/{id}")
+    public StudentDtoOut update (@PathVariable ("id") long id, @RequestBody StudentDtoIn studentDtoIn) {
+        return studentService.update(id,studentDtoIn);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.ok().build();
+    public StudentDtoOut delete(@PathVariable ("id") long id) {
+        return studentService.delete(id);
     }
-    @GetMapping
-    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
-        if (age > 0) {
-            return ResponseEntity.ok(studentService.findByAge(age));
+    @GetMapping("{id}")
+    public StudentDtoOut get(@PathVariable("id") long id){
+            return studentService.get(id);
         }
-        return ResponseEntity.ok(Collections.emptyList());
-    }
 }

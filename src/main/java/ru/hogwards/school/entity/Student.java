@@ -1,10 +1,12 @@
-package ru.hogwards.school.model;
+package ru.hogwards.school.entity;
 
+import javax.persistence.*;
 import java.util.Objects;
-
+@Entity
+@Table(name = "students")
 public class Student {
-
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private int age;
@@ -13,7 +15,8 @@ public class Student {
         this.name = name;
         this.age = age;
     }
-
+    public Student(){
+}
     @Override
     public String toString() {
         return "Student{" +

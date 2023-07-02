@@ -1,47 +1,90 @@
 package ru.hogwards.school.service;
 
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import ru.hogwards.school.model.Faculty;
+import ru.hogwards.school.dto.FacultyDtoIn;
+import ru.hogwards.school.dto.FacultyDtoOut;
+import ru.hogwards.school.dto.StudentDtoOut;
+import ru.hogwards.school.entity.Faculty;
+import ru.hogwards.school.exception.FacultyNotFoundException;
+import ru.hogwards.school.mapper.FacultyMapper;
+import ru.hogwards.school.mapper.StudentMapper;
+import ru.hogwards.school.repository.FacultyRepository;
+import ru.hogwards.school.repository.StudentRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
-    private final HashMap<Long, Faculty> faculties = new HashMap<>();
-    private long count = 0;
 
-    public Faculty addFaculty(Faculty faculty) {
-        faculty.setId(count++);
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
-    }
+    private final FacultyRepository facultyRepository;
+    private final StudentRepository studentRepository;
+    private final FacultyMapper facultyMapper;
+    private final StudentMapper studentMapper;
 
-    public Faculty findFaculty(long id) {
-        return faculties.get(id);
-    }
-
-    public Faculty editFaculty(Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())) {
-            return null;
-        }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+    public FacultyService(FacultyRepository facultyRepository,
+                          StudentRepository studentRepository,
+                          FacultyMapper facultyMapper,
+                          StudentMapper studentMapper) {
+        this.facultyRepository = facultyRepository;
+        this.studentRepository = studentRepository;
+        this.facultyMapper = facultyMapper;
+        this.studentMapper = studentMapper;
     }
 
-    public Faculty deleteFaculty(long id) {
-        return faculties.remove(id);
+    public FacultyDtoOut create(FacultyDtoIn facultyDtoIn) {
+        return facultyMapper.toDto(
+                facultyRepository.save(
+                        facultyMapper.toEntity(facultyDtoIn)
+                )
+        );
     }
-    public Collection<Faculty> findByColor(String color) {
-        ArrayList<Faculty> result = new ArrayList<>();
-        for (Faculty faculty : faculties.values()) {
-            if (Objects.equals(faculty.getColour(), color)) {
-                result.add(faculty);
-            }
-        }
-        return result;
+
+    public FacultyDtoOut update(long id, FacultyDtoIn facultyDtoIn) {
+        return facultyRepository.findById(id)
+                .map(oldFaculty -> {
+                    oldFaculty.setColour(facultyDtoIn.getColour());
+                    oldFaculty.setName(facultyDtoIn.getName());
+                    return facultyMapper.toDto(facultyRepository.save(oldFaculty));
+                })
+                .orElseThrow(() -> new FacultyNotFoundException(id));
     }
+
+    public FacultyDtoOut delete(long id) {
+        Faculty faculty = facultyRepository.findById(id)
+                .orElseThrow(() -> new FacultyNotFoundException(id));
+        facultyRepository.delete(faculty);
+        return facultyMapper.toDto(faculty);
+    }
+
+    public FacultyDtoOut get(long id) {
+        return facultyRepository.findById(id)
+                .map(facultyMapper::toDto)
+                .orElseThrow(() -> new FacultyNotFoundException(id));
+    }
+
+    public List<FacultyDtoOut> findAll(@Nullable String color) {
+        return Optional.ofNullable(color)
+                .map(facultyRepository::findAllByColour)
+                .orElseGet(facultyRepository::findAll).stream()
+                .map(facultyMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<FacultyDtoOut> findByColourOrName(String colorOrName) {
+        return facultyRepository.findAllByColourContainingIgnoreCaseOrNameContainingIgnoreCase(
+                        colorOrName,
+                        colorOrName
+                ).stream()
+                .map(facultyMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<StudentDtoOut> findStudents(long id) {
+        return studentRepository.findAllByFaculty_Id(id).stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }
-

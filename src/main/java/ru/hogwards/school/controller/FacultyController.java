@@ -3,7 +3,8 @@ package ru.hogwards.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwards.school.model.Faculty;
+import ru.hogwards.school.dto.FacultyDtoIn;
+import ru.hogwards.school.entity.Faculty;
 import ru.hogwards.school.service.FacultyService;
 
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
+    public FacultyDtoIn createFaculty(@RequestBody Faculty faculty) {
         return facultyService.addFaculty(faculty);
     }
 

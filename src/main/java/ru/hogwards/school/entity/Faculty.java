@@ -1,8 +1,14 @@
-package ru.hogwards.school.model;
+package ru.hogwards.school.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
-
+@Entity
+@Table(name = "faculties")
 public class Faculty {
+    @Id
+
     private long id;
     private String name;
     private String colour;
@@ -12,7 +18,8 @@ public class Faculty {
         this.name = name;
         this.colour = colour;
     }
-
+public Faculty(){
+}
     @Override
     public String toString() {
         return "Faculty{" +
