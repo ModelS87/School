@@ -64,18 +64,18 @@ public class FacultyService {
                 .orElseThrow(() -> new FacultyNotFoundException(id));
     }
 
-    public List<FacultyDtoOut> findAll(@Nullable String color) {
-        return Optional.ofNullable(color)
+    public List<FacultyDtoOut> findAll(@Nullable String colour) {
+        return Optional.ofNullable(colour)
                 .map(facultyRepository::findAllByColour)
                 .orElseGet(facultyRepository::findAll).stream()
                 .map(facultyMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<FacultyDtoOut> findByColourOrName(String colorOrName) {
+    public List<FacultyDtoOut> findByColourOrName(String colourOrName) {
         return facultyRepository.findAllByColourContainingIgnoreCaseOrNameContainingIgnoreCase(
-                        colorOrName,
-                        colorOrName
+                        colourOrName,
+                        colourOrName
                 ).stream()
                 .map(facultyMapper::toDto)
                 .collect(Collectors.toList());

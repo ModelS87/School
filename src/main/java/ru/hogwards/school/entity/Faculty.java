@@ -1,17 +1,18 @@
 package ru.hogwards.school.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 @Entity
 @Table(name = "faculties")
 public class Faculty {
     @Id
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String colour;
+    @OneToMany(mappedBy = "faculty")
+    private List<Student> students;
 
     public Faculty(long id, String name, String colour) {
         this.id = id;
@@ -20,28 +21,6 @@ public class Faculty {
     }
 public Faculty(){
 }
-    @Override
-    public String toString() {
-        return "Faculty{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", colour='" + colour + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Faculty faculty = (Faculty) o;
-        return id == faculty.id && Objects.equals(name, faculty.name) && Objects.equals(colour, faculty.colour);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, colour);
-    }
-
     public long getId() {
         return id;
     }
@@ -65,4 +44,12 @@ public Faculty(){
     public void setColour(String colour) {
         this.colour = colour;
     }
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
 }

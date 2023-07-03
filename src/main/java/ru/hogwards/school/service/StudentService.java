@@ -7,6 +7,7 @@ import ru.hogwards.school.dto.FacultyDtoOut;
 import ru.hogwards.school.dto.StudentDtoIn;
 import ru.hogwards.school.dto.StudentDtoOut;
 import ru.hogwards.school.entity.Student;
+import ru.hogwards.school.exception.FacultyNotFoundException;
 import ru.hogwards.school.exception.StudentNotFoundException;
 import ru.hogwards.school.mapper.FacultyMapper;
 import ru.hogwards.school.mapper.StudentMapper;
@@ -48,7 +49,7 @@ public class StudentService {
                     oldStudent.setAge(studentDtoIn.getAge());
                     oldStudent.setName(studentDtoIn.getName());
                     Optional.ofNullable(studentDtoIn.getFacultyId()).ifPresent(facultyId ->
-                            oldStudent.setFaculty
+                            oldStudent.setFaculty(
                                     facultyRepository.findById(facultyId)
                                             .orElseThrow(() -> new FacultyNotFoundException(facultyId))
                             )
@@ -91,11 +92,4 @@ public class StudentService {
                 .map(facultyMapper::toDto)
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
-
-    public StudentDtoOut uploadAvatar(long id, MultipartFile multipartFile) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException(id));
-             StudentDtoOut studentDtoOut = studentMapper.toDto(student);
-
-}
 }

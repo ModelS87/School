@@ -4,7 +4,7 @@ public class FacultyDtoIn {
     private String name;
     private String colour;
 
-    public FacultyDtoIn(String name, String color) {
+    public FacultyDtoIn(String name, String colour) {
         this.name = name;
         this.colour = colour;
     }
