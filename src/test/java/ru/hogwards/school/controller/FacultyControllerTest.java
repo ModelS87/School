@@ -209,10 +209,10 @@ public class FacultyControllerTest {
             List<Faculty> faculties = Stream.iterate(1, id -> id + 1)
                     .map(this::generate)
                     .limit(20)
-                    .toList();
+                    .collect(Collectors.toList());
             List<FacultyDtoOut> expectedResult = faculties.stream()
                     .map(facultyMapper::toDto)
-                    .toList();
+                    .collect(Collectors.toList());
 
             when(facultyRepository.findAll()).thenReturn(faculties);
 
@@ -246,7 +246,7 @@ public class FacultyControllerTest {
             List<FacultyDtoOut> expectedResult2 = faculties.stream()
                     .filter(faculty -> faculty.getColour().equals(colour))
                     .map(facultyMapper::toDto)
-                    .toList();
+                    .collect(Collectors.toList());
             when(facultyRepository.findAllByColour(eq(colour))).thenReturn(faculties);
 
             mockMvc.perform(
