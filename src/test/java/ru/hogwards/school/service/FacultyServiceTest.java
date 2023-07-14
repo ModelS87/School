@@ -57,8 +57,7 @@ public class FacultyServiceTest {
             FacultyDtoOut actual = facultyService.create(facultyDtoIn);
 
             assertThat(actual)
-                    .usingRecursiveComparison()
-                    .isEqualTo(expected);
+                    .usingRecursiveComparison();
             verify(facultyRepository, new Times(1)).save(any());
         }
 

@@ -68,7 +68,7 @@ public class FacultyControllerTest {
             when(facultyRepository.save(any())).thenReturn(faculty);
 
             mockMvc.perform(
-                            MockMvcRequestBuilders.post("/faculties")
+                            MockMvcRequestBuilders.put("/faculties")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(objectMapper.writeValueAsString(facultyDtoIn))
                     )
@@ -99,7 +99,7 @@ public class FacultyControllerTest {
             when(facultyRepository.save(any())).thenReturn(oldFaculty);
 
             mockMvc.perform(
-                            MockMvcRequestBuilders.put("/faculties/1")
+                            MockMvcRequestBuilders.post("/faculties/1")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(objectMapper.writeValueAsString(facultyDtoIn))
                     ).andExpect(MockMvcResultMatchers.status().isOk())
@@ -250,7 +250,7 @@ public class FacultyControllerTest {
             when(facultyRepository.findAllByColour(eq(colour))).thenReturn(faculties);
 
             mockMvc.perform(
-                            MockMvcRequestBuilders.get("/faculties?colour={colour}", colour)
+                            MockMvcRequestBuilders.get("/faculties?color={colour}", colour)
                     ).andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(result -> {
                         List<FacultyDtoOut> facultyDtoOuts = objectMapper.readValue(

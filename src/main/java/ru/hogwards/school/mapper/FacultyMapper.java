@@ -13,8 +13,8 @@ public class FacultyMapper {
     public FacultyDtoOut toDto(Faculty faculty){
             FacultyDtoOut facultyDtoOut = new FacultyDtoOut();
             facultyDtoOut.setId(faculty.getId());
-            faculty.setName(faculty.getName());
-            faculty.setColour(faculty.getColour());
+            facultyDtoOut.setName(faculty.getName());
+            facultyDtoOut.setColour(faculty.getColour());
             return facultyDtoOut;
         }
         public Faculty toEntity(FacultyDtoIn facultyDtoIn){
