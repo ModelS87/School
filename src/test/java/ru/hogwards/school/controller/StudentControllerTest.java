@@ -37,7 +37,6 @@ public class StudentControllerTest {
         studentRepository.deleteAll();
     }
 
-    @Test
     public StudentDtoOut createStudent() {
         StudentDtoIn studentDtoIn = generate();
 
