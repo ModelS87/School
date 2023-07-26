@@ -1,14 +1,17 @@
 package ru.hogwards.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwards.school.dto.AvatarDto;
 import ru.hogwards.school.entity.Avatar;
 import ru.hogwards.school.entity.Student;
 import ru.hogwards.school.exception.AvatarNotFoundException;
 import ru.hogwards.school.exception.AvatarProcessingException;
+import ru.hogwards.school.mapper.AvatarMapper;
 import ru.hogwards.school.repository.AvatarRepository;
 import ru.hogwards.school.repository.StudentRepository;
 
@@ -17,17 +20,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AvatarService {
     private final AvatarRepository avatarRepository;
     private final Path pathToAvatarDir;
+    private final AvatarMapper avatarMapper;
 
     public AvatarService(AvatarRepository avatarRepository,
-                         @Value("${path.to.avatar.dir}") String pathToAvatarDir) {
+                         @Value("${path.to.avatar.dir}") String pathToAvatarDir,
+                         AvatarMapper avatarMapper) {
         this.avatarRepository = avatarRepository;
         this.pathToAvatarDir = Path.of(pathToAvatarDir);
+        this.avatarMapper = avatarMapper;
     }
 
     public Avatar create(Student student, MultipartFile multipartFile) {
@@ -84,5 +92,10 @@ public class AvatarService {
         } catch (IOException e) {
             throw new AvatarProcessingException();
         }
+    }
+    public List<AvatarDto> getPage(int page, int size){
+        return avatarRepository.findAll(PageRequest.of(page, size)).stream()
+                .map(avatarMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

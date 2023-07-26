@@ -1,7 +1,9 @@
 package ru.hogwards.school.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwards.school.dto.FacultyDtoOut;
 import ru.hogwards.school.dto.StudentDtoIn;
@@ -101,8 +103,20 @@ public class StudentService {
                 .orElseThrow(() -> new StudentNotFoundException(id));
         Avatar avatar = avatarService.create(student, multipartFile);
         StudentDtoOut studentDtoOut = studentMapper.toDto(student);
-        studentDtoOut.setAvatarUrl("http://localhost:8080/avatars/" + avatar.getId() + "/from-db");
         return studentDtoOut;
     }
 
+    public int getCountOfStudents() {
+        return studentRepository.getCountOfStudents();
+    }
+
+    public double getAverageAge() {
+        return studentRepository.getAverageAge();
+    }
+    @Transactional(readOnly = true)
+    public List<StudentDtoOut> getLastStudents(int count) {
+        return studentRepository.getLastStudents((java.awt.print.Pageable) Pageable.ofSize(count)).stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

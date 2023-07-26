@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.hogwards.school.dto.FacultyDtoIn;
 import ru.hogwards.school.dto.FacultyDtoOut;
 import ru.hogwards.school.entity.Faculty;
+import ru.hogwards.school.mapper.AvatarMapper;
 import ru.hogwards.school.mapper.FacultyMapper;
 import ru.hogwards.school.mapper.StudentMapper;
 import ru.hogwards.school.repository.FacultyRepository;
@@ -28,11 +29,12 @@ public class FacultyServiceTest {
         public void beforeEach() {
             facultyRepository = mock(FacultyRepository.class);
             FacultyMapper facultyMapper = new FacultyMapper();
+            AvatarMapper avatarMapper = new AvatarMapper();
             facultyService = new FacultyService(
                     facultyRepository,
                     mock(StudentRepository.class),
                     facultyMapper,
-                    new StudentMapper(facultyMapper, facultyRepository)
+                    new StudentMapper(facultyMapper, facultyRepository,avatarMapper)
             );
         }
 
