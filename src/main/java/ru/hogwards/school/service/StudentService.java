@@ -115,7 +115,7 @@ public class StudentService {
     }
     @Transactional(readOnly = true)
     public List<StudentDtoOut> getLastStudents(int count) {
-        return studentRepository.getLastStudents((java.awt.print.Pageable) Pageable.ofSize(count)).stream()
+        return studentRepository.getLastStudents(count).stream()
                 .map(studentMapper::toDto)
                 .collect(Collectors.toList());
     }

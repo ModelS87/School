@@ -2,6 +2,7 @@ package ru.hogwards.school.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.hogwards.school.dto.StudentDtoOut;
 import ru.hogwards.school.entity.Student;
 
@@ -19,8 +20,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("SELECT avg (s.age) FROM Student s")
     double getAverageAge();
-    @Query("SELECT s FROM Student s ORDER BY s.id DESC")
-    List<Student> getLastStudents(Pageable pageable);
+    @Query(value = "SELECT s. * FROM students s ORDER BY s.id DESC LIMIT :count", nativeQuery = true)
+    List<Student> getLastStudents(@Param("count")int count);
+
 
 
 }
