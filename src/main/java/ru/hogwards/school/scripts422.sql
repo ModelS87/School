@@ -22,7 +22,7 @@ CREATE TABLE owners
 );
 
 INSERT INTO cars (brand, model, price)
-VALUES ('Lada', 'Vesta',1200000)
+VALUES ('Lada', 'Vesta',1200000);
 
 INSERT INTO owners (name, age, car_id)
 VALUES ('Вася', 24, 1),
