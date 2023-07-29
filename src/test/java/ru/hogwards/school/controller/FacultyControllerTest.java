@@ -20,8 +20,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.hogwards.school.dto.FacultyDtoIn;
 import ru.hogwards.school.dto.FacultyDtoOut;
 import ru.hogwards.school.entity.Faculty;
+import ru.hogwards.school.mapper.AvatarMapper;
 import ru.hogwards.school.mapper.FacultyMapper;
 import ru.hogwards.school.mapper.StudentMapper;
+import ru.hogwards.school.repository.AvatarRepository;
 import ru.hogwards.school.repository.FacultyRepository;
 import ru.hogwards.school.repository.StudentRepository;
 import ru.hogwards.school.service.FacultyService;
@@ -59,6 +61,10 @@ public class FacultyControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     private final Faker faker = new Faker();
+    @MockBean
+    private AvatarRepository avatarRepository;
+    @SpyBean
+    private AvatarMapper avatarMapper;
 
         @Test
         public void createTest() throws Exception {

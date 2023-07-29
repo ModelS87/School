@@ -26,4 +26,4 @@ VALUES ('Lada', 'Vesta',1200000);
 
 INSERT INTO owners (name, age, car_id)
 VALUES ('Вася', 24, 1),
-    ('Иван', 25, 1)
+       ('Иван', 25, 1)
