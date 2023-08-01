@@ -1,5 +1,7 @@
 package ru.hogwards.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
+    private static final Logger LOG = LoggerFactory.getLogger(StudentService.class);
 
     private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
@@ -42,6 +45,7 @@ public class StudentService {
     }
 
     public StudentDtoOut create(StudentDtoIn studentDtoIn) {
+        LOG.info("Was invoked method create with parameter");
         return studentMapper.toDto(
                 studentRepository.save(
                         studentMapper.toEntity(studentDtoIn)
@@ -50,6 +54,7 @@ public class StudentService {
     }
 
     public StudentDtoOut update(long id, StudentDtoIn studentDtoIn) {
+        LOG.info("Was invoked method update with parameter id = {}", id);
         return studentRepository.findById(id)
                 .map(oldStudent -> {
                     oldStudent.setAge(studentDtoIn.getAge());
@@ -66,6 +71,7 @@ public class StudentService {
     }
 
     public StudentDtoOut delete(long id) {
+        LOG.info("Was invoked method delete with parameter");
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException(id));
         studentRepository.delete(student);
@@ -73,12 +79,14 @@ public class StudentService {
     }
 
     public StudentDtoOut get(long id) {
+        LOG.info("Was invoked method get with parameter id = {}", id);
         return studentRepository.findById(id)
                 .map(studentMapper::toDto)
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
     public List<StudentDtoOut> findAll(@Nullable Integer age) {
+        LOG.info("Was invoked method findall with parameter");
         return Optional.ofNullable(age)
                 .map(studentRepository::findAllByAge)
                 .orElseGet(studentRepository::findAll).stream()
@@ -87,18 +95,21 @@ public class StudentService {
     }
 
     public List<StudentDtoOut> findByAgeBetween(int ageFrom, int ageTo) {
+        LOG.info("Was invoked method findByAgeBetween with parameter");
         return studentRepository.findAllByAgeBetween(ageFrom, ageTo).stream()
                 .map(studentMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public FacultyDtoOut findFaculty(long id) {
+        LOG.info("Was invoked method findFaculty with parameter");
         return studentRepository.findById(id)
                 .map(Student::getFaculty)
                 .map(facultyMapper::toDto)
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
     public StudentDtoOut uploadAvatar(long id, MultipartFile multipartFile) {
+        LOG.info("Was invoked method uploadAvatar with parameter");
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException(id));
         Avatar avatar = avatarService.create(student, multipartFile);
@@ -107,14 +118,17 @@ public class StudentService {
     }
 
     public int getCountOfStudents() {
+        LOG.info("Was invoked method gerCountOfStudents with parameter");
         return studentRepository.getCountOfStudents();
     }
 
     public double getAverageAge() {
+        LOG.info("Was invoked method getAverageAge with parameter");
         return studentRepository.getAverageAge();
     }
     @Transactional(readOnly = true)
     public List<StudentDtoOut> getLastStudents(int count) {
+        LOG.info("Was invoked method getLastStudents with parameter");
         return studentRepository.getLastStudents(count).stream()
                 .map(studentMapper::toDto)
                 .collect(Collectors.toList());
