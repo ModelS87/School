@@ -133,4 +133,20 @@ public class StudentService {
                 .map(studentMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    public List<String> getNamesStartWithA() {
+        return studentRepository.findAll().stream()
+                .map(student -> student.getName().toUpperCase())
+                .filter(name->name.startsWith("A"))
+                .sorted()
+                .collect(Collectors.toList());
+    }
+    public double getAvgAge(){
+        List<Student> students = studentRepository.findAll();
+        int sumAge = students.stream()
+                .map(Student::getAge)
+                .reduce(Integer::sum)
+                .get();
+        return (double) sumAge/students.size();
+    }
 }
